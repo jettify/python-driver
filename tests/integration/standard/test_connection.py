@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from cassandra.io.aioreactor import AsyncioConnection
 
 try:
     import unittest2 as unittest
@@ -245,4 +246,14 @@ class LibevConnectionTests(ConnectionTests, unittest.TestCase):
         if LibevConnection is None:
             raise unittest.SkipTest(
                 'libev does not appear to be installed properly')
+        ConnectionTests.setUp(self)
+
+
+class AsyncoreConnectionTests(ConnectionTests, unittest.TestCase):
+
+    klass = AsyncioConnection
+
+    def setUp(self):
+        if is_monkey_patched():
+            raise unittest.SkipTest("Can't test asycnio with monkey patching")
         ConnectionTests.setUp(self)
